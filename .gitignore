@@ -1,0 +1,5 @@
+persistence/database/*
+persistence/code/*
+variables.env
+docker-compose.override.yml
+.idea

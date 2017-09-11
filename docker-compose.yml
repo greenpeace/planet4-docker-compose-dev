@@ -1,0 +1,61 @@
+version: '3.1'
+services:
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    env_file:
+      - variables.env
+#    networks:
+#      planet4_network:
+#        ipv4_address: 172.20.0.2
+
+  phpmyadmin:
+    restart: always
+    image: phpmyadmin/phpmyadmin:4.7
+    depends_on:
+      - mysql
+    expose:
+      - "80"
+    ports:
+      - "8082:80"
+    env_file:
+      - variables.env
+
+  planet4:
+    build:
+      context: ./docker/app
+      dockerfile: Dockerfile
+    restart: always
+#    user: 502:20
+    ports:
+      - "82:80"
+      - 9000
+    depends_on:
+      - mysql
+    env_file:
+      - variables.env
+
+  nginx:
+    image: diegol/nginx:alpine
+    depends_on:
+      - mysql
+      - planet4
+    ports:
+      - 80:80
+    env_file:
+      - variables.env
+#    networks:
+#      planet4_network:
+#        ipv4_address: 172.20.0.4
+
+
+
+#
+#
+#networks:
+#  planet4_network:
+#    ipam:
+#      config:
+#        - subnet: 172.20.0.0/24

@@ -1,0 +1,13 @@
+version: "3.1"
+services:
+  planet4:
+    volumes:
+      - /Users/user/Documents/projects/planet4-base:/var/www/html:rw
+      - /Users/user/Documents/projects/plugins:/var/www/html/public/wp-content/plugins:rw
+  nginx:
+    volumes:
+      - /Users/user/Documents/projects/planet4-base:/var/www/html:rw
+      - /Users/user/Documents/projects/plugins:/var/www/html/public/wp-content/plugins:rw
+  mysql:
+    volumes:
+      - /Users/user/Documents/persistence/mysql:/var/lib/mysql:rw
