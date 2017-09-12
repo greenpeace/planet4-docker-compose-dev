@@ -36,38 +36,51 @@ GNU/Linux users have to install docker-compose separately:
 
 Recommended setup is to clone [planet4-base](https://github.com/greenpeace/planet4-base) and link it to the planet4 container.
 
-1. (Optional) Pull the planet4-base repository to a directory, eg. /somewhere/planet4-base 
-    ```bash
-     $ git clone https://github.com/greenpeace/planet4-base
-    ```
-2. Pull all the custom greenpeace's plugins to a directory, eg. /somewhere/plugins
-3. Install docker
-4. (Optional) Install portainer (you will need to create a directory, eg. "/Users/user/dev/docker"
+1. Install docker
+1. (Optional) Install portainer (you will need to create a directory, eg. "/Users/user/dev/docker"
     ```bash
      $ docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /Users/user/dev/docker:/data portainer/portainer
     ```
-5. (Optional) In your browser go to : http://localhost:9000 (portainer's main page)
-6. (Optional) Create username/password
-7. (Optional) Select "Manage the Docker instance where Portainer is running" and press "connect"
-8. In your computer, create the following directory somewhere /somewhere/mysql (your database will be stored here, so that it does not get deleted everytime the container gets rebuilt)
+1. (Optional) In your browser go to : http://localhost:9000 (portainer's main page)
+1. (Optional) Create username/password
+1. (Optional) Select "Manage the Docker instance where Portainer is running" and press "connect"
+1. Pull the planet4-base repository to a directory, eg. /Users/user/Documents/projects/planet4/planet4-base 
     ```bash
-     $ mkdir /somewhere/mysql
+     $ git clone https://github.com/greenpeace/planet4-base
     ```
-9. Copy the file docker-compose.override.yml.example into docker-compose.override.yml 
-10. Edit the file docker-compose.override.yml and put the relevant paths from steps 1 and 2 in the parts before the :
+1. And then switch to the develop branch
+    ```bash
+     $ git checkout develop
+    ```      
+1. In your computer, create the following directory somewhere /somewhere/mysql (your database will be stored here, so that it does not get deleted everytime the container gets rebuilt)
+    ```bash
+     $ mkdir /Users/user/Documents/projects/planet4/mysql
+    ```
+1. Copy the file docker-compose.override.yml.example into docker-compose.override.yml 
+1. Edit the file docker-compose.override.yml and put the relevant paths from steps 1 and 2 in the parts before the :
     ```yaml
       planet4:
           volumes:
-            - **/Users/user/Documents/projects/planet4-base**:/var/www/html:rw
-            - **/Users/user/Documents/projects/plugins**:/var/www/html/public/wp-content/plugins:rw
+            - **/Users/user/Documents/projects/planet4/planet4-base**:/var/www/html:rw
+	  nginx:
+		volumes:
+		  - **/Users/user/Documents/projects/planet4/planet4-base**:/var/www/html:rw
+	  mysql:
+		volumes:
+		  - **/Users/user/Documents/projects/planet4**/mysql:/var/lib/mysql:rw
+
     ```
-11. Copy the file variables.env.example to variables.env
-12. Launch docker-compose
+1. Copy the file variables.env.example to variables.env
+1. Launch docker-compose
     ```bash
       $ cd planet4-docker-compose
       $ docker-compose up
     ```
-
+1. Go to http://0.0.0.0:8082/tbl_sql.php?db=planet4  , and run the two sqls:
+    ```
+UPDATE wp_options SET option_value = 'http://localhost:82' WHERE wp_options.option_id = 1;
+UPDATE wp_options SET option_value = 'http://localhost:82' WHERE wp_options.option_id = 2;
+    ```
 You should be able to see all your docker containers at http://localhost:9000.
 
 Your p4 website at: http://127.0.0.1:82 
