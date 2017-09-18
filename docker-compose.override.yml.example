@@ -4,6 +4,7 @@ services:
     volumes:
       - /Users/user/Documents/projects/planet4-base:/var/www/html:rw
       - /Users/user/Documents/projects/plugins:/var/www/html/public/wp-content/plugins:rw
+      - /Users/kdiamant/Documents/projects/p4-codeception:/var/www/tests
   nginx:
     volumes:
       - /Users/user/Documents/projects/planet4-base:/var/www/html:rw

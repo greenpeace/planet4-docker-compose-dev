@@ -3,7 +3,7 @@ FROM php:7.1-fpm-alpine
 ENV PLANET4_BASE_URL https://github.com/greenpeace/planet4-base
 
 RUN apk --update add \
-  git mysql-client rsync nginx subversion && \
+  git mysql-client rsync nginx subversion bash && \
   docker-php-ext-install mysqli && \
   curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/3.1.2.tar.gz &&\
   tar xfz /tmp/redis.tar.gz &&\

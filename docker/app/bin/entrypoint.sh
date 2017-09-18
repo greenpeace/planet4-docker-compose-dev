@@ -1,8 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 until cd /var/www/html/public/wp-content/plugins ; do
     echo "Wait for project folder mount"
     sleep 5
+done
+
+declare -a R_ARRAY=($(echo $PLUGINS_REPOS | awk 'BEGIN{FS="__";} {for (i = 1; i <=NF; i++) print $i }'))
+for h in "${R_ARRAY[@]}"; do
+echo $h
+    git clone $h
 done
 
 cp /var/www/html/wp-cli.yml.default /var/www/html/wp-cli.yml
