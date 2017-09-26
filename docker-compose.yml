@@ -7,9 +7,9 @@ services:
       - 3306:3306
     env_file:
       - variables.env
-#    networks:
-#      planet4_network:
-#        ipv4_address: 172.20.0.2
+    networks:
+      planet4_network:
+        ipv4_address: 172.20.0.2
 
   phpmyadmin:
     restart: always
@@ -19,16 +19,20 @@ services:
     expose:
       - "80"
     ports:
-      - "8082:80"
+      - "8083:80"
     env_file:
       - variables.env
+    networks:
+      planet4_network:
+        ipv4_address: 172.20.0.5
 
   planet4:
     build:
       context: ./docker/app
       dockerfile: Dockerfile
     restart: always
-#    user: 502:20
+    environment:
+      - USERID=1000
     ports:
       - "82:80"
       - 9000
@@ -36,6 +40,9 @@ services:
       - mysql
     env_file:
       - variables.env
+    networks:
+      planet4_network:
+        ipv4_address: 172.20.0.3
 
   nginx:
     image: diegol/nginx:alpine
@@ -43,19 +50,16 @@ services:
       - mysql
       - planet4
     ports:
-      - 80:80
+      - 89:80
     env_file:
       - variables.env
-#    networks:
-#      planet4_network:
-#        ipv4_address: 172.20.0.4
+    networks:
+      planet4_network:
+        ipv4_address: 172.20.0.4
 
 
-
-#
-#
-#networks:
-#  planet4_network:
-#    ipam:
-#      config:
-#        - subnet: 172.20.0.0/24
+networks:
+  planet4_network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

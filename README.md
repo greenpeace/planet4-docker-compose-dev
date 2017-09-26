@@ -88,6 +88,14 @@ Your p4 website at: http://127.0.0.1:82
 phpmyadmin at: http://127.0.0.1:8082 
 
 
+## Composer
+
+You can run composer inside planet4 container using c
+
+    ```bash
+      $ c install
+      $ c update
+    ```
 
 ## Environment variables
 
