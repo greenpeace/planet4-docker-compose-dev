@@ -76,10 +76,9 @@ Recommended setup is to clone [planet4-base](https://github.com/greenpeace/plane
       $ cd planet4-docker-compose
       $ docker-compose up
     ```
-1. Go to http://0.0.0.0:8082/tbl_sql.php?db=planet4  , and run the two sqls:
-    ```
-UPDATE wp_options SET option_value = 'http://localhost:82' WHERE wp_options.option_id = 1;
-UPDATE wp_options SET option_value = 'http://localhost:82' WHERE wp_options.option_id = 2;
+1. Edit hosts file (/etc/hosts linux, mac ) to point 172.20.0.4 to test.planet4.dev.
+    ```bash
+        172.20.0.4      test.planet4.dev       
     ```
 You should be able to see all your docker containers at http://localhost:9000.
 
@@ -96,6 +95,25 @@ You can run composer inside planet4 container using c
       $ c install
       $ c update
     ```
+    
+## Wp cli
+
+You can run wp cli inside planet4 container using wp
+
+    ```bash
+      $ wp user list
+      $ wp user delete dev
+    ```
+
+## Mounted directories
+
+Insert the repos (separated by | ) that you want to be cloned in the plugins directory by altering PLUGINS_REPOS variable in variables.env
+PLUGINS_REPOS='https://github.com/greenpeace/planet4-plugin-action-content-type|https://github.com/greenpeace/planet4-plugin-engagingnetworks'
+
+Also you need to map host os user to user nginx in the container so you can edit files in your os and nginx be able to read the mounted directories.
+Edit USERID variable in variables.env to your user id (needed for linux distributions).
+USERID=1000
+
 
 ## Environment variables
 
