@@ -14,6 +14,8 @@ RUN apk --update add \
 
 RUN docker-php-ext-configure \
         gd --with-png-dir=/usr --with-jpeg-dir=/usr --with-freetype-dir
+RUN pecl install xdebug-2.5.5 \
+    && docker-php-ext-enable xdebug
 RUN  docker-php-ext-install mcrypt mysqli json gd \
     session \
     simplexml \
@@ -27,7 +29,8 @@ RUN  docker-php-ext-install mcrypt mysqli json gd \
 RUN  curl -sS https://getcomposer.org/installer | php && \
   mv composer.phar /usr/bin/composer && \
   chown nginx:nginx /var/www/html && \
-  echo http://nl.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories && \
+  echo http://dl-2.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories && \
+  apk --no-cache add shadow && \
   rm -rf /var/cache/apk/*  && \
   rm -rf /tmp/*
 
