@@ -62,12 +62,12 @@ Recommended setup is to clone [planet4-base](https://github.com/greenpeace/plane
       planet4:
           volumes:
             - **/Users/user/Documents/projects/planet4/planet4-base**:/var/www/html:rw
-	  nginx:
-		volumes:
-		  - **/Users/user/Documents/projects/planet4/planet4-base**:/var/www/html:rw
-	  mysql:
-		volumes:
-		  - **/Users/user/Documents/projects/planet4**/mysql:/var/lib/mysql:rw
+      nginx:
+          volumes:
+            - **/Users/user/Documents/projects/planet4/planet4-base**:/var/www/html:rw
+      mysql:
+          volumes:
+            - **/Users/user/Documents/projects/planet4**/mysql:/var/lib/mysql:rw
 
     ```
 1. Copy the file variables.env.example to variables.env
@@ -82,9 +82,9 @@ Recommended setup is to clone [planet4-base](https://github.com/greenpeace/plane
     ```
 You should be able to see all your docker containers at http://localhost:9000.
 
-Your p4 website at: http://127.0.0.1:82 
+Your p4 website at: http://test.planet4.dev
 
-phpmyadmin at: http://127.0.0.1:8082 
+Phpmyadmin at: http://127.0.0.1:8083 
 
 
 ## Composer

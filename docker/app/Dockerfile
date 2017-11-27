@@ -1,51 +1,77 @@
-FROM php:7.1-fpm-alpine
+FROM ubuntu:16.04
 
 ENV PLANET4_BASE_URL https://github.com/greenpeace/planet4-base
 
-RUN apk --update add \
-    git mysql-client rsync nginx subversion bash sudo \
-    busybox-suid nano libmcrypt-dev libltdl mysql-client \
-    libxml2 libxml2-dev curl curl-dev libpng libpng-dev freetype-dev libjpeg-turbo-dev  && \
-  curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/3.1.2.tar.gz &&\
-  tar xfz /tmp/redis.tar.gz &&\
-  rm -r /tmp/redis.tar.gz &&\
-  mkdir -p /usr/src/php/ext && \
-  mv phpredis-3.1.2 /usr/src/php/ext/redis
+USER root
 
-RUN docker-php-ext-configure \
-        gd --with-png-dir=/usr --with-jpeg-dir=/usr --with-freetype-dir
-RUN pecl install xdebug-2.5.5 \
-    && docker-php-ext-enable xdebug
-RUN  docker-php-ext-install mcrypt mysqli json gd \
-    session \
-    simplexml \
-    dom \
-    mbstring \
-    zip \
-    pdo \
-    pdo_mysql \
-    redis
+RUN apt-get update && apt-get -y install \
+    bash-completion \
+    curl \
+    git \
+    mysql-client \
+    libxml2 \
+    libxml2-dev \
+    rsync \
+    nano \
+    libmcrypt-dev \
+    php \
+    php-common \
+    php-cli \
+    php-curl \
+    php-ctype \
+    php-calendar \
+    php-fileinfo \
+    php-ftp \
+    php-fpm \
+    php-gettext \
+    php-gd \
+    php-recode \
+    php-iconv \
+    php-intl \
+    php-json \
+    php-ldap \
+    php-mbstring \
+    php-mcrypt \
+    php-mysql \
+    php-pdo \
+    php-soap \
+    php-dev \
+    php-xml \
+    php-xmlrpc \
+    php-zip \
+    nginx locales sudo
 
-RUN  curl -sS https://getcomposer.org/installer | php && \
-  mv composer.phar /usr/bin/composer && \
-  chown nginx:nginx /var/www/html && \
-  echo http://dl-2.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories && \
-  apk --no-cache add shadow && \
-  rm -rf /var/cache/apk/*  && \
-  rm -rf /tmp/*
+RUN pecl install xdebug-2.5.5
 
-USER nginx
 WORKDIR /var/www/html
 
 USER root
+RUN curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/bin/composer
 
-COPY conf/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY conf/nginx/site.conf /etc/nginx/conf.d/site.conf
+# Set the locale
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+COPY conf/php/xdebug.ini /etc/php/7.0/mods-available/xdebug.ini
+RUN chmod 644 /etc/php/7.0/mods-available/xdebug.ini && phpenmod xdebug
+
+COPY conf/php/php-fpm.conf /etc/php/7.0/fpm/php-fpm.conf
+COPY conf/php/php-fpm-pool.conf /etc/php/7.0/fpm/pool.d/www.conf
 COPY bin/entrypoint.sh /entrypoint.sh
-COPY bin/cu.sh /usr/bin/cu
-COPY bin/c.sh /usr/bin/c
-COPY bin/wp.sh /usr/bin/wp
-RUN chmod +x /usr/bin/c* /usr/bin/wp
-COPY conf/php/php.ini /usr/local/etc/php-fpm.d/php_session.conf
+COPY bin/wp-completion.bash /etc/bash_completion.d/wp
+COPY bin/composer-completion.bash /etc/bash_completion.d/composer
+COPY conf/wp-config-defines.php/ /wp-config-defines.php
+
+RUN chmod -R 644 /etc/bash_completion.d/* /wp-config-defines.php
+RUN chmod 777 -R /tmp && chmod o+t -R /tmp
+RUN adduser user && \
+    adduser user sudo && \
+    echo "user:secret" | chpasswd
+RUN chown -R user:user /entrypoint.sh /home/user
+RUN echo "user  ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/user"
+USER user
+ENV PATH="/var/www/html/vendor/bin:${PATH}"
 
 CMD [ "/entrypoint.sh" ]

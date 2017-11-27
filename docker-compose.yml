@@ -32,10 +32,10 @@ services:
     build:
       context: ./docker/app
       dockerfile: Dockerfile
+    image: greenpeace/planet4
     container_name: planet4
     restart: always
     ports:
-      - "82:80"
       - 9000
     depends_on:
       - mysql
@@ -52,7 +52,7 @@ services:
       - mysql
       - planet4
     ports:
-      - 89:80
+      - 80:80
     env_file:
       - variables.env
     networks:
