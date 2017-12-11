@@ -47,7 +47,10 @@ WORKDIR /var/www/html
 
 USER root
 RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/bin/composer
+    mv composer.phar /usr/bin/composer && \
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
 
 # Set the locale
 RUN locale-gen en_US.UTF-8
@@ -72,6 +75,6 @@ RUN adduser user && \
 RUN chown -R user:user /entrypoint.sh /home/user
 RUN echo "user  ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/user"
 USER user
-ENV PATH="/var/www/html/vendor/bin:${PATH}"
+ENV PATH="${PATH}:/var/www/html/vendor/bin"
 
 CMD [ "/entrypoint.sh" ]

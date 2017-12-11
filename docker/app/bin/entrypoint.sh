@@ -1,7 +1,9 @@
 #!/bin/bash
 
 #sudo usermod -u $USERID user
-id
+sudo composer self-update
+sudo wp cli update
+sudo chown -R user:user /home/user
 
 
 if [ $WAIT_FOUR_PLUGINS_MOUNT -eq 1 ]; then
@@ -33,10 +35,10 @@ sed -i s:127.0.0.1:$DBHOST: /var/www/html/wp-cli.yml
 cd /var/www/html
 
 # check if dev user already exists and delete it
-if [ -f 'vendor/bin/wp' ]; then
-    dev_user=( $( cd /var/www/html && vendor/bin/wp user list --field=user_login | grep dev | wc -l ) )
+if [ -f '/usr/local/bin/wp' ]; then
+    dev_user=( $( wp user list --field=user_login | grep dev | wc -l ) )
     if [ $dev_user -gt 0 ]; then
-        vendor/bin/wp user delete dev --yes
+        wp user delete dev --yes
     fi
 fi
 
@@ -52,7 +54,7 @@ fi
 
 
 # check if dev user already exists and create it
-dev_user=( $( cd /var/www/html && vendor/bin/wp user list --field=user_login | grep dev | wc -l ) )
+dev_user=( $( wp user list --field=user_login | grep dev | wc -l ) )
 if [ $dev_user -eq 0 ]; then
     echo -e "Create dev user. \n";
     composer core:add-super-admin-user
