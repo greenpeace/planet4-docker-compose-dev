@@ -34,6 +34,7 @@ RUN apt-get update && apt-get -y install \
     php-mcrypt \
     php-mysql \
     php-pdo \
+    php-redis \
     php-soap \
     php-dev \
     php-xml \

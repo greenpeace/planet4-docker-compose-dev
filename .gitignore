@@ -4,3 +4,4 @@ variables.env
 docker-compose.override.yml
 .idea
 \.DS_Store
+persistence/*

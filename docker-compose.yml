@@ -46,7 +46,10 @@ services:
         ipv4_address: 172.20.0.3
 
   nginx:
-    image: diegol/nginx:alpine
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    image: greenpeace/planet4_nginx
     container_name: planet4_nginx
     depends_on:
       - mysql
@@ -59,6 +62,25 @@ services:
       planet4_network:
         ipv4_address: 172.20.0.4
 
+  redis:
+    image: redis:4-alpine
+    networks:
+      planet4_network:
+        ipv4_address: 172.20.0.6
+    volumes:
+      - ./persistence/redis:/data
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - 8084:8081
+    networks:
+      planet4_network:
+        ipv4_address: 172.20.0.7
 
 networks:
   planet4_network:

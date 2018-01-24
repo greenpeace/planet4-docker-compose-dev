@@ -14,6 +14,8 @@ This repository contains needed files to set up a docker development environment
  * MySQL container as a database engines
  * Phpmyadmin container as a database administration application
  * nginx container to proxy requests to php-fpm
+ * redis container for object caching
+ * redis-commander container as a redis administration application
 
 ## How to set up the docker environment
 
@@ -82,28 +84,29 @@ Recommended setup is to clone [planet4-base](https://github.com/greenpeace/plane
     ```
 You should be able to see all your docker containers at http://localhost:9000.
 
-Your p4 website at: http://test.planet4.dev
+Your p4 website at: http://test.planet4.dev.
 
-Phpmyadmin at: http://127.0.0.1:8083 
+Phpmyadmin at: http://127.0.0.1:8083.
 
+Redis-commander at: http://127.0.0.1:8084.
 
 ## Composer
 
-You can run composer inside planet4 container using c
+You can run composer inside planet4 container.
 
-    ```bash
-      $ c install
-      $ c update
-    ```
-    
+```bash
+  $ composer install
+  $ composer update
+```
+
 ## Wp cli
 
-You can run wp cli inside planet4 container using wp
+You can run wp cli inside planet4 container using wp.
 
-    ```bash
-      $ wp user list
-      $ wp user delete dev
-    ```
+```bash
+  $ wp user list
+  $ wp user delete dev
+```
 
 ## Mounted directories
 

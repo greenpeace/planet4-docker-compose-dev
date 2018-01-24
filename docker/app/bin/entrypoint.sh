@@ -63,6 +63,9 @@ fi
 # add debug defines to wp-config
 grep -q "SAVEQUERIES" /var/www/html/public/wp-config.php || sed -e '1r /wp-config-defines.php' -i /var/www/html/public/wp-config.php
 
+# copy object-cache file for wp-redis plugin
+cp -f /var/www/html/public/wp-content/plugins/wp-redis/object-cache.php /var/www/html/public/wp-content/object-cache.php
+
 # install and activate useful plugins for development
 #wp plugin install debug-bar
 #wp plugin activate debug-bar
