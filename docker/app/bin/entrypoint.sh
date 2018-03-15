@@ -66,6 +66,9 @@ grep -q "SAVEQUERIES" /var/www/html/public/wp-config.php || sed -e '1r /wp-confi
 # copy object-cache file for wp-redis plugin
 cp -f /var/www/html/public/wp-content/plugins/wp-redis/object-cache.php /var/www/html/public/wp-content/object-cache.php
 
+# generate master theme's style css
+composer core:style
+
 # install and activate useful plugins for development
 #wp plugin install debug-bar
 #wp plugin activate debug-bar

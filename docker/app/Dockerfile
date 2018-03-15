@@ -27,6 +27,7 @@ RUN apt-get update && apt-get -y install \
     php-gd \
     php-recode \
     php-iconv \
+    php-imagick \
     php-intl \
     php-json \
     php-ldap \
@@ -40,7 +41,7 @@ RUN apt-get update && apt-get -y install \
     php-xml \
     php-xmlrpc \
     php-zip \
-    nginx locales sudo
+    nginx locales sudo subversion wget
 
 RUN pecl install xdebug-2.5.5
 
@@ -51,7 +52,11 @@ RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/bin/composer && \
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
+    mv wp-cli.phar /usr/local/bin/wp && \
+    wget -O phpunit https://phar.phpunit.de/phpunit-6.phar && \
+    mv phpunit /usr/local/bin/phpunit && \
+    chmod +x /usr/local/bin/phpunit
+
 
 # Set the locale
 RUN locale-gen en_US.UTF-8
