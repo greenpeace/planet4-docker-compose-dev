@@ -41,9 +41,19 @@ RUN apt-get update && apt-get -y install \
     php-xml \
     php-xmlrpc \
     php-zip \
-    nginx locales sudo subversion wget
+    nginx \
+    locales \
+    sudo \
+    subversion \
+    wget \
+    inotify-tools \
+    build-essential
 
 RUN pecl install xdebug-2.5.5
+RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh && \
+    sudo bash nodesource_setup.sh &&\
+    apt-get -y install nodejs && \
+    npm install -g stylelint eslint
 
 WORKDIR /var/www/html
 
@@ -83,4 +93,5 @@ RUN echo "user  ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/user"
 USER user
 ENV PATH="${PATH}:/var/www/html/vendor/bin"
 
+#RUN sudo sysctl fs.inotify.max_user_watches=12424288
 CMD [ "/entrypoint.sh" ]

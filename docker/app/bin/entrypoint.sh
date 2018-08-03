@@ -27,6 +27,7 @@ fi
 cp /var/www/html/wp-cli.yml.default /var/www/html/wp-cli.yml
 
 sudo sed -i s:localhost:$XDEBUG_REMOTE_HOST: /etc/php/7.0/mods-available/xdebug.ini
+sed -i "s|url: .*|url: https://$PLANET4_DOMAIN|" /var/www/html/wp-cli.yml
 sed -i s:db_user:$DBUSER: /var/www/html/wp-cli.yml
 sed -i s:db_pass:$DBPASS: /var/www/html/wp-cli.yml
 sed -i s:wordpress:$DBNAME: /var/www/html/wp-cli.yml
@@ -34,22 +35,14 @@ sed -i s:127.0.0.1:$DBHOST: /var/www/html/wp-cli.yml
 
 cd /var/www/html
 
-# check if dev user already exists and delete it
-if [ -f '/usr/local/bin/wp' ]; then
-    dev_user=( $( wp user list --field=user_login | grep dev | wc -l ) )
-    if [ $dev_user -gt 0 ]; then
-        wp user delete dev --yes
-    fi
-fi
 
-
-# if wordpress core already exists do a composers update instead of composer install
+# if wordpress core already exists do a composer update instead of composer install
 if [ ! -d "/var/www/html/public/wp-content" ]; then
   echo -e "Running composer install and docker-site-install";
-  composer install && composer docker-site-install
+  composer install && composer run-script docker-site-install
 else
   echo -e "Running composer update and docker-site-update";
-  composer update && composer docker-site-update
+  composer update && composer run-script docker-site-update
 fi
 
 
@@ -57,7 +50,7 @@ fi
 dev_user=( $( wp user list --field=user_login | grep dev | wc -l ) )
 if [ $dev_user -eq 0 ]; then
     echo -e "Create dev user. \n";
-    composer core:add-super-admin-user
+    wp user create dev p4-dev@greenpeace.org --role=administrator --user_pass=u3vsREsvjwo
 fi
 
 # add debug defines to wp-config
@@ -68,12 +61,17 @@ cp -f /var/www/html/public/wp-content/plugins/wp-redis/object-cache.php /var/www
 
 # generate master theme's style css
 composer core:style
+composer core:js
+composer core:js-minify
 
 # install and activate useful plugins for development
 #wp plugin install debug-bar
 #wp plugin activate debug-bar
 #wp plugin install query-monitor
 #wp plugin activate query-monitor
+
+#/tmp/watch_scss.sh &
+#/tmp/watch_js.sh &
 
 # start php-fpm
 echo "Starting pfp-fpm"

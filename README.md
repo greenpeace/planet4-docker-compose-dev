@@ -138,3 +138,7 @@ Planet4 container variables:
   * DBHOST=db
 
 ## Notes
+TODO
+File watchers for scss/js compiling
+Change test domain
+Preserve uploads/images
